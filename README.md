@@ -107,9 +107,10 @@ Things to expect:
   looks back 24 hours, so news from Saturday and most of Sunday is not
   included. To cover the weekend, raise `hours` in `config.toml`. That changes
   every day's brief, not just Monday's.
-- **GitHub pauses schedules in quiet repositories.** If nobody changes the
-  repository for 60 days, GitHub turns the schedule off and emails you. Turn it
-  back on from the Actions tab.
+- **GitHub can pause the schedule in a quiet public repository.** If a public
+  repository has no activity for 60 days, GitHub turns the schedule off and
+  emails you. Turn it back on from the Actions tab. Private repositories aren't
+  affected.
 
 To get a brief right away, open the **Actions** tab, choose **Daily news
 brief**, and click **Run workflow**.
