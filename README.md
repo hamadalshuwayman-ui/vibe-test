@@ -1,6 +1,6 @@
 # Daily AI news brief
 
-This is a small program that writes a short news brief every morning. It runs
+This is a small program that writes a short news brief every weekday morning. It runs
 by itself on GitHub and saves each brief in the `briefs` folder.
 
 **Topic:** the AI industry.
@@ -8,7 +8,7 @@ by itself on GitHub and saves each brief in the `briefs` folder.
 
 ## What it does
 
-Every day, the program:
+Every weekday, the program:
 
 1. **Reads four sources first:** Reuters, AP News, TechCrunch and The Verge
    (their AI sections).
@@ -74,7 +74,42 @@ You need an Anthropic API key. Get one at https://console.anthropic.com.
 4. Go to **Settings → Actions → General → Workflow permissions**. Choose **Read
    and write permissions** and save. This lets the job save each brief.
 
-That's all. The brief is written every day at 05:17 UTC.
+That's all. The brief is written Monday to Friday at 07:00 Riyadh time.
+
+## When it runs
+
+GitHub runs the program for you on its own computers, so yours can be off.
+The schedule is in `.github/workflows/daily-brief.yml`, on this line:
+
+```
+- cron: "0 4 * * 1-5"
+```
+
+Read it as: minute `0`, hour `4`, any day of the month, any month, days
+`1-5` (Monday to Friday). GitHub's clock is always UTC (London winter time).
+04:00 UTC is 07:00 in Riyadh. Saudi Arabia doesn't change its clocks, so this
+holds all year.
+
+Each run:
+
+1. GitHub starts a fresh, empty computer.
+2. It copies this repository onto it and installs the Python packages.
+3. It runs `newsagent.py`, using your API key from the repository secrets.
+4. It saves the new brief into the `briefs` folder in this repository. Then
+   the computer is thrown away.
+
+Things to expect:
+
+- **The run can start late.** GitHub's schedule is "as soon as it can", not
+  to the second. Runs usually start within a few minutes of 07:00, but at busy
+  times they can be 15 minutes or more late.
+- **Monday's brief covers Sunday morning to Monday morning only.** Each run
+  looks back 24 hours, so news from Saturday and most of Sunday is not
+  included. To cover the weekend, raise `hours` in `config.toml`. That changes
+  every day's brief, not just Monday's.
+- **GitHub pauses schedules in quiet repositories.** If nobody changes the
+  repository for 60 days, GitHub turns the schedule off and emails you. Turn it
+  back on from the Actions tab.
 
 To get a brief right away, open the **Actions** tab, choose **Daily news
 brief**, and click **Run workflow**.
@@ -95,7 +130,9 @@ in plain words:
   articles.
 
 To change the time it runs, edit the `cron` line in
-`.github/workflows/daily-brief.yml`. `"17 5 * * *"` means 05:17 UTC every day.
+`.github/workflows/daily-brief.yml` (see "When it runs" above). Remember
+to convert to UTC: for 06:30 Riyadh time on weekdays, use `"30 3 * * 1-5"`.
+For a Sunday-to-Thursday week, change `1-5` to `0-4`.
 
 ## Running it on your own computer
 
