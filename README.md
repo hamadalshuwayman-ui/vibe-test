@@ -26,8 +26,13 @@ Every day, the program:
      anything unsupported, overstated or wrong. If it finds anything, the item
      is dropped.
 
-   An item is also dropped if the article can't be opened (for example, a
-   paywall) or if its publication date can't be confirmed.
+   An item is also dropped if it has no proper link (a full web address
+   starting with `http://` or `https://`), if the article can't be opened (for
+   example, a paywall), or if its publication date can't be confirmed.
+
+   As a last safety check, the program looks at the finished brief before
+   saving it. If any item has no link, it stops with an error and saves
+   nothing. On GitHub, that run shows as failed on the Actions tab.
 6. **Ends with one line** saying how many sources it read and how many items it
    dropped.
 

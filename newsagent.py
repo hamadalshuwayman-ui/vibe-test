@@ -456,6 +456,12 @@ def write_and_check(config: dict, c: Candidate, article: str) -> tuple[Item | No
 # --------------------------------------------------------------------------
 
 
+def has_link(url: str) -> bool:
+    """True if the URL is a full web address (http or https, with a site name)."""
+    parsed = urlparse(url or "")
+    return parsed.scheme in ("http", "https") and bool(parsed.netloc)
+
+
 def build_items(config: dict, picks: list[Candidate], now: dt.datetime, stats: RunStats) -> list[Item]:
     since = now - dt.timedelta(hours=config["hours"])
     items: list[Item] = []
@@ -463,6 +469,10 @@ def build_items(config: dict, picks: list[Candidate], now: dt.datetime, stats: R
         if len(items) >= config["items"]:
             break
         log(f"Checking: {c.title}")
+        if not has_link(c.url):
+            stats.dropped.append((c.title, f"no link (got {c.url!r})"))
+            log("  dropped: no link")
+            continue
         article, published = open_article(c)
         stats.articles_opened += 1
         when = published or c.published
@@ -521,6 +531,12 @@ def main() -> int:
     picks = shortlist(config, candidates) if candidates else []
     log(f"{len(picks)} on the shortlist")
     items = build_items(config, picks, now, stats)
+
+    # Last check before saving: every item in the brief must have a link.
+    unlinked = [it.headline for it in items if not has_link(it.url)]
+    if unlinked:
+        log(f"ERROR: {len(unlinked)} item(s) have no link; not saving the brief: {unlinked}")
+        return 2
 
     brief = render(config, items, stats, now)
     out = Path(args.out)
