@@ -1,0 +1,49 @@
+# Settings for the news agent. Edit this file to change what it looks for.
+# Lines that start with # are notes and are ignored.
+
+# What the brief is about.
+topic = "the AI industry: new models and products, funding rounds and acquisitions, regulation and court cases, chips and computing power, and big moves by the major AI companies"
+
+# Who reads it. "Why it matters" is written for this person.
+reader = "a founder building an AI startup, who needs to know what changes their competition, their costs, their ability to raise money, or their legal risk"
+
+# How far back to look, in hours.
+hours = 24
+
+# How many items the brief should contain.
+items = 10
+
+# How many candidates to check before giving up on filling the brief.
+# Some candidates get dropped during checking, so this is larger than `items`.
+shortlist = 16
+
+# Things to leave out.
+ignore = [
+  "Opinion pieces, columns, editorials, reviews and podcasts",
+  "Sponsored, partner or advertising content",
+  "Rumours and speculation that no named person, company or document backs up",
+  "Gadget reviews, shopping deals and how-to guides",
+]
+
+# The sources to read. `kind` is "rss" for a news feed, or "page" for an
+# ordinary web page that lists articles.
+
+[[sources]]
+name = "Reuters"
+url = "https://www.reuters.com/technology/artificial-intelligence/"
+kind = "page"
+
+[[sources]]
+name = "AP News"
+url = "https://apnews.com/hub/artificial-intelligence"
+kind = "page"
+
+[[sources]]
+name = "TechCrunch"
+url = "https://techcrunch.com/category/artificial-intelligence/feed/"
+kind = "rss"
+
+[[sources]]
+name = "The Verge"
+url = "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+kind = "rss"
